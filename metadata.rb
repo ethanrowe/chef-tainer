@@ -1,5 +1,5 @@
 name             "tainer"
-version          "0.0.1"
+version          "0.0.2"
 maintainer       "Ethan Rowe"
 maintainer_email "ethan@the-rowes.com"
 license          "MIT License"
