@@ -1,13 +1,26 @@
 action :create do
-  # Tainers::Specification#create will return true if it creates a container, false otherwise.
-  # It won't try to create if it sees that it already exists.
-  if ! new_resource.tainer.create
+  if ! create_with_retry
     Chef::Log.info "#{ new_resource } already exists (container '#{ new_resource.tainer.name }')."
     new_resource.updated_by_last_action false
   else
     Chef::Log.info "Create #{ new_resource } (container '#{ new_resource.tainer.name }')."
     new_resource.updated_by_last_action true
   end
+end
+
+def create_with_retry
+  tries = new_resource.retry_attempts
+  begin
+   # Tainers::Specification#create will return a container object if it creates a container, false otherwise.
+   # It won't try to create if it sees that it already exists.
+   container = new_resource.tainer.create
+  rescue Docker::Error::NotFoundError => e
+    tries -= 1
+    Chef::Log.info "Exception thrown: #{e.message}, #{tries} tries left"
+    sleep 1
+    tries < 1 ? raise : retry
+  end
+  container
 end
 
 def load_current_resource
