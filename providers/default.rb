@@ -18,7 +18,7 @@ def create_with_retry
     tries -= 1
     Chef::Log.info "Exception thrown: #{e.message}, #{tries} tries left"
     sleep 1
-    retry unless tries < 1
+    tries < 1 ? raise : retry
   end
   container
 end
