@@ -9,9 +9,9 @@ action :create do
 end
 
 def create_with_retry
-  tries = 3
+  tries = new_resource.retry_attempts
   begin
-   # Tainers::Specification#create will return true if it creates a container, false otherwise.
+   # Tainers::Specification#create will return a container object if it creates a container, false otherwise.
    # It won't try to create if it sees that it already exists.
    container = new_resource.tainer.create
   rescue Docker::Error::NotFoundError => e

@@ -27,6 +27,14 @@ class Chef
         )
       end
 
+      def retry_attempts(arg=3)
+        set_or_return(
+          :retry_attempts,
+          arg,
+          :kind_of => Integer
+        )
+      end
+
       def tainer
         @tainer ||= Tainers.specify(specification)
       end
@@ -35,7 +43,7 @@ class Chef
       # meaning:
       # - Keys are strings
       # - Values are Hashes, Arrays, Strings, or Numbers only
-      # 
+      #
       # Rather than validate, this creates a new hash by converting the original to JSON and back again.
       # This has the happy effect of reducing things to the types that the API understands.  Symbols will
       # automatically go to strings.
